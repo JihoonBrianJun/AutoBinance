@@ -35,13 +35,13 @@ def futures_change_leverage(client, leverage):
                                                      leverage=leverage)
     print(leverage_change)
     
-def get_max_order_info(client, leverage, fee_rate=0.0005):
+def get_max_order_info(client, leverage, max_ratio=0.99, fee_rate=0.0005):
     balance = client.futures_account_balance()
     balance_df = pd.DataFrame(balance)
     usdt_balance = float(balance_df[balance_df['asset']=='USDT']['balance'].iloc[0])
     
     mark_price = float(client.futures_mark_price(symbol='BTCUSDT')['markPrice'])
-    max_quantity = round(usdt_balance/(mark_price*(1+fee_rate)), 4) * leverage * 0.99
+    max_quantity = round(usdt_balance/(mark_price*(1+fee_rate)), 4) * leverage * max_ratio
     return mark_price, max_quantity
 
 def create_futures_order(client, order_position, mark_price, max_quantity):
@@ -50,7 +50,7 @@ def create_futures_order(client, order_position, mark_price, max_quantity):
         stop_loss_price = mark_price * 0.995
     elif order_position == 'SHORT':
         take_profit_price = mark_price * 0.995
-        stop_loss_price = mark_price * 1.005      
+        stop_loss_price = mark_price * 1.005
     
     buy_order = client.futures_create_order(symbol='BTCUSDT',
                                             side='BUY',
@@ -108,7 +108,7 @@ def main(args):
                     ma25_change = [ma_25[i+1]-ma_25[i] >= -args.change_threshold for i in range(args.check_window_len-1)]
                     ma99_change = [ma_99[i+1]-ma_99[i] >= -args.change_threshold for i in range(args.check_window_len-1)]
                     if sum(ma25_change) == args.check_window_len-1 and sum(ma99_change) == args.check_window_len-1:
-                        mark_price, max_quantity = get_max_order_info(client, leverage=args.leverage, fee_rate=0.0005)
+                        mark_price, max_quantity = get_max_order_info(client, leverage=args.leverage, max_ratio=args.max_ratio)
                         try:
                             create_futures_order(client, order_position="LONG", mark_price=mark_price, max_quantity=max_quantity)
                         except BinanceAPIException as e:
@@ -123,7 +123,7 @@ def main(args):
                     ma25_change = [ma_25[i+1]-ma_25[i] <= args.change_threshold for i in range(args.check_window_len-1)]
                     ma99_change = [ma_99[i+1]-ma_99[i] <= args.change_threshold for i in range(args.check_window_len-1)]
                     if sum(ma25_change) == args.check_window_len-1 and sum(ma99_change) == args.check_window_len-1:
-                        mark_price, max_quantity = get_max_order_info(client, leverage=args.leverage, fee_rate=0.0005)
+                        mark_price, max_quantity = get_max_order_info(client, leverage=args.leverage, max_ratio=args.max_ratio)
                         try:
                             create_futures_order(client, order_position="SHORT", mark_price=mark_price, max_quantity=max_quantity)
                         except BinanceAPIException as e:
@@ -143,5 +143,6 @@ if __name__ == '__main__':
     parser.add_argument('--kline_limit', type=int, default=110)
     parser.add_argument('--check_window_len', type=int, default=3)
     parser.add_argument('--change_threshold', type=float, default=3)
+    parser.add_argument('--max_ratio', type=float, default=0.01)
     args = parser.parse_args()
     main(args)
