@@ -5,7 +5,7 @@ from argparse import ArgumentParser
 from binance import Client
 from binance.exceptions import BinanceAPIException
 from account import futures_change_leverage, get_max_order_info
-from trade_signal import get_order_signal
+from trade_signal import get_momentum_signal, get_arbitrage_signal
 
 def create_futures_order(client, order_position, stop_threshold, mark_price, max_quantity):
     if order_position == 'LONG':
@@ -62,7 +62,7 @@ def main(args):
     while True:
         if int(datetime.now().second) == 0:
             klines = client.futures_klines(symbol='BTCUSDT', interval='1m', limit=args.kline_limit)    
-            position = get_order_signal(klines, args.kline_limit, args.check_window_len, args.change_threshold)
+            position = get_momentum_signal(klines, args.kline_limit, args.check_window_len, args.change_threshold)
             
             if position in ["LONG", "SHORT"]:
                 mark_price, max_quantity = get_max_order_info(client, leverage=args.leverage, max_ratio=args.max_ratio)
