@@ -8,7 +8,7 @@ Model is trained on the public data provided by Binance, and actual trading is e
 
 Correctly and precisely predict the `rate of price change after 1 minute`, based on the `previous 100 minutes kline data`.
 
-<!-- ![](assets/project_overview.png "ProjectOverview") -->
+![](assets/project_overview.png "ProjectOverview")
 
 
 ## Preliminary
