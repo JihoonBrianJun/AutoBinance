@@ -6,7 +6,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import StepLR
 from argparse import ArgumentParser
-from utils.preprocess import preprocess
+from utils.preprocess import preprocess_csv
 from utils.train_utils import train_predictor
 from model.kline import KlinePredictor
 
@@ -16,7 +16,7 @@ def main(args):
     if not os.path.exists(save_dir.split('/')[0]):
         os.makedirs(save_dir.split('/')[0])
     
-    data = np.array(preprocess(args.data_path, args.data_len, args.data_hop, args.pred_len, args.volume_normalizer))
+    data = np.array(preprocess_csv(args.data_path, args.data_len, args.data_hop, args.pred_len, args.volume_normalizer))
     
     train_idx = np.random.choice(np.arange(len(data)), size=int(len(data)*args.train_ratio), replace=False)
     test_idx = np.array(list(set(np.arange(len(data)).tolist()).difference(set(train_idx.tolist()))))
@@ -86,7 +86,5 @@ if __name__ == '__main__':
     parser.add_argument('--gamma', type=float, default=0.999)
     parser.add_argument('--value_threshold', type=float, default=0.1)
     parser.add_argument('--strong_threshold', type=float, default=0.1)
-    
     args = parser.parse_args()
-    
     main(args)
