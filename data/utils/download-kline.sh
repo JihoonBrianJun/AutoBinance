@@ -1,0 +1,2 @@
+python3 data/utils/download-kline.py -t um -s BTCUSDT -i 1m -startDate 2024-01-01 -endDate 2024-03-31 -skip-daily 1
+python3 data/utils/download-kline.py -t um -s BTCUSDT -i 1m -startDate 2024-04-01 -endDate 2024-04-14 -skip-monthly 1
