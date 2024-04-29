@@ -39,7 +39,7 @@ python3 download-kline.py
 ```
 
 ## Data Preprocessing Pipeline
-
+To be updated
 
 
 ## Train result
@@ -62,6 +62,8 @@ Train hyperparameters is summarized in the following table.
 |1000|200|1e-5|0.999|
 
 After training, metrics evaluated on validation data were as follows:
+
+(To be updated)
 
 <!-- ![](assets/train_result.png "TrainResult") -->
 
@@ -87,6 +89,12 @@ After training, metrics evaluated on validation data were as follows:
 
 
 ## Real-time Evaluation Result
+One can run Real-time evaluation using Binance API and pre-trained model by the following command:
+```
+python3 real_time_predict.py
+```
+
+(To be Updated)
 
 <!-- Model performance was further checked based on real-time orderbook and trade data of Top 10 cryptocurrencies (sorted by market cap) from Upbit. Each experiment was 3 hour in duration, and we underwent total 2 experiments until now.
 
