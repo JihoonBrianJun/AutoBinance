@@ -6,14 +6,14 @@ from .test_utils import test_predictor
 def train_predictor(model, optimizer, scheduler, loss_function,
                     train_loader, test_loader, test_bs,
                     data_len, pred_len, value_threshold, strong_threshold,
-                    epoch, device, save_dir):
+                    epoch, stop_correct_threshold, device, save_dir):
     
     best_test_loss = np.inf
     for epoch in tqdm(range(epoch)):
         if epoch % 10 == 0:
-            test_loss = test_predictor(model, loss_function, test_loader, test_bs,
-                                       data_len, pred_len, value_threshold, strong_threshold,
-                                       device, save_dir, best_test_loss)
+            test_loss, correct_rate = test_predictor(model, loss_function, test_loader, test_bs,
+                                                     data_len, pred_len, value_threshold, strong_threshold,
+                                                     device, save_dir, best_test_loss)
             if test_loss < best_test_loss:
                 best_test_loss = test_loss
 
@@ -38,9 +38,10 @@ def train_predictor(model, optimizer, scheduler, loss_function,
         print(f'Epoch {epoch} Average Loss: {epoch_avg_loss}')
         scheduler.step()
         
-        if epoch_avg_loss < best_test_loss:
-            print(f"Train early stop at epoch {epoch} (epoch_loss={epoch_avg_loss}, best_val_loss={best_test_loss})")
-            break
+        if epoch >= 10:
+            if epoch_avg_loss < best_test_loss or correct_rate >= stop_correct_threshold:
+                print(f"Train early stop at epoch {epoch} (epoch_loss={epoch_avg_loss}, best_val_loss={best_test_loss})")
+                break
     
     test_predictor(model, loss_function, test_loader, test_bs,
                    data_len, pred_len, value_threshold, strong_threshold,

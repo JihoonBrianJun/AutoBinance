@@ -36,6 +36,8 @@ def test_predictor(model, loss_function, dataloader, test_bs,
             print(f'Out: {out[:,-1]}\n Label: {label[:,-1]}')
     
     avg_test_loss = np.sqrt(test_loss / (idx+1))
+    correct_rate = metric_dict["correct"] / (test_bs*(idx+1))
+    
     print(f'Test Average Loss: {avg_test_loss}')
     print(f'Test Correct: {metric_dict["correct"]} out of {test_bs*(idx+1)}')
     print(f'Test Recall: {metric_dict["rec_correct"]} out of {metric_dict["rec_tgt"]}')
@@ -47,4 +49,4 @@ def test_predictor(model, loss_function, dataloader, test_bs,
         elif avg_test_loss < best_test_loss:
             torch.save(model.state_dict(), save_dir)
             
-    return avg_test_loss
+    return avg_test_loss, correct_rate

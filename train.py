@@ -61,6 +61,7 @@ def main(args):
                         value_threshold=args.value_threshold, 
                         strong_threshold=args.strong_threshold,
                         epoch=args.epoch,
+                        stop_correct_threshold=args.stop_correct_threshold,
                         device=device,
                         save_dir=save_dir)
 
@@ -86,5 +87,6 @@ if __name__ == '__main__':
     parser.add_argument('--gamma', type=float, default=0.999)
     parser.add_argument('--value_threshold', type=float, default=0.1)
     parser.add_argument('--strong_threshold', type=float, default=0.05)
+    parser.add_argument('--stop_correct_threshold', type=float, default=0.6)
     args = parser.parse_args()
     main(args)
