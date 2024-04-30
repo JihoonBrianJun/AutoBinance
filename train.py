@@ -12,9 +12,20 @@ from model.kline import KlinePredictor
 
 
 def main(args):
-    save_dir = f'{args.save_dir}_{args.train_type}_{args.pred_len}.pt'
+    save_dir = f'{args.save_dir}_{args.train_type}_{args.pred_len}min'
     if not os.path.exists(save_dir.split('/')[0]):
         os.makedirs(save_dir.split('/')[0])
+    train_config = {"train_type": args.train_type,
+                    "data_len": args.data_len,
+                    "pred_len": args.pred_len,
+                    "volume_normalizer": args.volume_normalizer,
+                    "model_dim": args.model_dim,
+                    "n_head": args.n_head,
+                    "num_layers": args.num_layers,
+                    "src_feature_dim": args.src_feature_dim,
+                    "tgt_feature_dim": args.tgt_feature_dim,
+                    "initial_lr": args.lr,
+                    "gamma": args.gamma}
     
     data = np.array(preprocess_csv(args.data_path, args.data_len, args.data_hop, args.pred_len, args.volume_normalizer))
     
@@ -63,7 +74,8 @@ def main(args):
                         epoch=args.epoch,
                         stop_correct_threshold=args.stop_correct_threshold,
                         device=device,
-                        save_dir=save_dir)
+                        save_dir=save_dir,
+                        train_config=train_config)
 
 if __name__ == '__main__':
     parser = ArgumentParser()
