@@ -85,6 +85,6 @@ if __name__ == '__main__':
     parser.add_argument('--lr', type=float, default=1e-5)
     parser.add_argument('--gamma', type=float, default=0.999)
     parser.add_argument('--value_threshold', type=float, default=0.1)
-    parser.add_argument('--strong_threshold', type=float, default=0.1)
+    parser.add_argument('--strong_threshold', type=float, default=0.05)
     args = parser.parse_args()
     main(args)

@@ -5,10 +5,7 @@ from .metric_utils import compute_predictor_metrics
 
 def test_predictor(model, loss_function, dataloader, test_bs,
                    data_len, pred_len, value_threshold, strong_threshold,
-                   device, save_dir, save_ckpt=True, load_ckpt=False):
-    
-    if save_ckpt:
-        torch.save(model.state_dict(), save_dir)
+                   device, save_dir, best_test_loss=None, save_ckpt=True, load_ckpt=False):
     if load_ckpt:
         model.load_state_dict(torch.load(save_dir))
 
@@ -37,8 +34,17 @@ def test_predictor(model, loss_function, dataloader, test_bs,
         
         if idx == 0:
             print(f'Out: {out[:,-1]}\n Label: {label[:,-1]}')
-            
-    print(f'Test Average Loss: {np.sqrt(test_loss / (idx+1))}')
+    
+    avg_test_loss = np.sqrt(test_loss / (idx+1))
+    print(f'Test Average Loss: {avg_test_loss}')
     print(f'Test Correct: {metric_dict["correct"]} out of {test_bs*(idx+1)}')
     print(f'Test Recall: {metric_dict["rec_correct"]} out of {metric_dict["rec_tgt"]}')
     print(f'Test Precision (Strong): {metric_dict["strong_prec_correct"]} out of {metric_dict["strong_prec_tgt"]}')
+
+    if save_ckpt:
+        if best_test_loss is None:
+            torch.save(model.state_dict(), save_dir)
+        elif avg_test_loss < best_test_loss:
+            torch.save(model.state_dict(), save_dir)
+            
+    return avg_test_loss
