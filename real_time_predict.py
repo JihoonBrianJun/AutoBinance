@@ -13,7 +13,7 @@ def predict(client, args):
     with open(config_save_dir, 'r') as f:
         config = json.load(f)
 
-    klines = client.futures_klines(symbol='BTCUSDT', interval='1m', limit=args.data_len+1)[:-1]
+    klines = client.futures_klines(symbol='BTCUSDT', interval='1m', limit=config["data_len"]+1)[:-1]
     src, tgt = preprocess_kline(klines, config["data_len"], config["volume_normalizer"])
 
     if args.gpu:
