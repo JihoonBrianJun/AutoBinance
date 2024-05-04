@@ -42,7 +42,7 @@ def train_predictor(model, optimizer, scheduler, loss_function,
         scheduler.step()
         
         if epoch >= 10:
-            if epoch_avg_loss < best_test_loss * train_config.stop_loss_ratio or correct_rate >= train_config.stop_correct_threshold:
+            if epoch_avg_loss < best_test_loss * train_config['stop_loss_ratio'] or correct_rate >= train_config['stop_correct_threshold']:
                 print(f"Train early stop at epoch {epoch} (epoch_loss={epoch_avg_loss}, best_val_loss={best_test_loss}), correct_rate={correct_rate}")
                 break
     
