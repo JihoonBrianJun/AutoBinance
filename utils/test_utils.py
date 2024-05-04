@@ -44,6 +44,9 @@ def test_predictor(model, loss_function, dataloader, test_bs,
     
     avg_test_loss = np.sqrt(test_loss / (idx+1))
     correct_rate = metric_dict["correct"] / (test_bs*(idx+1))
+    recall = metric_dict["rec_correct"] / metric_dict["rec_tgt"]
+    precision_strong = metric_dict["rec_tgt"] / metric_dict["strong_prec_tgt"]
+    test_score = (correct_rate + recall + precision_strong) / 3
     
     print(f'Test Average Loss: {avg_test_loss}')
     print(f'Test Correct: {metric_dict["correct"]} out of {test_bs*(idx+1)}')
@@ -54,7 +57,7 @@ def test_predictor(model, loss_function, dataloader, test_bs,
         if best_test_loss is None:
             save_model(model, save_dir, train_config)
         # elif avg_test_loss < best_test_loss:
-        elif correct_rate > best_test_correct:
+        elif test_score > best_test_score:
             save_model(model, save_dir, train_config)
             
-    return avg_test_loss, correct_rate
+    return avg_test_loss, test_score
