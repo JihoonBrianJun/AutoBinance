@@ -60,4 +60,4 @@ def test_predictor(model, loss_function, dataloader, test_bs,
         elif test_score > best_test_score:
             save_model(model, save_dir, train_config)
             
-    return avg_test_loss, test_score
+    return avg_test_loss, correct_rate, test_score

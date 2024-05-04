@@ -13,9 +13,9 @@ def train_predictor(model, optimizer, scheduler, loss_function,
     best_test_score = 0
     for epoch in tqdm(range(epoch)):
         if epoch % 10 == 0 and epoch != 0:
-            test_loss, test_score = test_predictor(model, loss_function, test_loader, test_bs,
-                                                   data_len, pred_len, value_threshold, strong_threshold,
-                                                   device, save_dir, train_config, best_test_loss, best_test_score)
+            test_loss, correct_rate, test_score = test_predictor(model, loss_function, test_loader, test_bs,
+                                                                 data_len, pred_len, value_threshold, strong_threshold,
+                                                                 device, save_dir, train_config, best_test_loss, best_test_score)
             if test_loss < best_test_loss:
                 best_test_loss = test_loss
             if test_score > best_test_score:
