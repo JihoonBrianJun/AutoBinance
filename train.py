@@ -57,7 +57,7 @@ def main(args):
         num_param += param.numel()
     print(f'model param size: {num_param}')
     
-    optimizer = optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.lr*10)
+    optimizer = optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     scheduler = StepLR(optimizer, step_size=1, gamma=args.gamma)
     
     if args.train_type == 'predictor':
@@ -98,6 +98,7 @@ if __name__ == '__main__':
     parser.add_argument('--bs', type=int, default=256)
     parser.add_argument('--gpu', type=bool, default=True)
     parser.add_argument('--lr', type=float, default=1e-5)
+    parser.add_argument('--weight_decay', type=float, default=0.1)
     parser.add_argument('--gamma', type=float, default=0.999)
     parser.add_argument('--max_norm', type=float, default=1)
     parser.add_argument('--value_threshold', type=float, default=0.1)
