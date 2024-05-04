@@ -11,7 +11,8 @@ def save_model(model, save_dir, train_config):
     
 def test_predictor(model, loss_function, dataloader, test_bs,
                    data_len, pred_len, value_threshold, strong_threshold,
-                   device, save_dir, train_config, best_test_loss=None, save_ckpt=True, load_ckpt=False):
+                   device, save_dir, train_config, best_test_loss=None, best_test_correct=None,
+                   save_ckpt=True, load_ckpt=False):
     if load_ckpt:
         model.load_state_dict(torch.load(f'{save_dir}.pt'))
 
@@ -52,7 +53,8 @@ def test_predictor(model, loss_function, dataloader, test_bs,
     if save_ckpt:
         if best_test_loss is None:
             save_model(model, save_dir, train_config)
-        elif avg_test_loss < best_test_loss:
+        # elif avg_test_loss < best_test_loss:
+        elif correct_rate > best_test_correct:
             save_model(model, save_dir, train_config)
             
     return avg_test_loss, correct_rate
