@@ -25,7 +25,9 @@ def main(args):
                     "src_feature_dim": args.src_feature_dim,
                     "tgt_feature_dim": args.tgt_feature_dim,
                     "initial_lr": args.lr,
-                    "gamma": args.gamma}
+                    "gamma": args.gamma,
+                    "stop_loss_ratio": args.stop_loss_ratio,
+                    "stop_correct_threshold": args.stop_correct_threshold}
     
     data = np.array(preprocess_csv(args.data_path, args.data_len, args.data_hop, args.pred_len, args.volume_normalizer))
     

@@ -57,7 +57,7 @@ def test_predictor(model, loss_function, dataloader, test_bs,
         if best_test_loss is None:
             save_model(model, save_dir, train_config)
         # elif avg_test_loss < best_test_loss:
-        elif test_score > best_test_score:
+        elif test_score > best_test_score or correct_rate >= train_config.stop_correct_threshold:
             save_model(model, save_dir, train_config)
             
     return avg_test_loss, correct_rate, test_score

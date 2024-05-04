@@ -6,8 +6,7 @@ from .test_utils import test_predictor
 def train_predictor(model, optimizer, scheduler, loss_function,
                     train_loader, test_loader, test_bs,
                     data_len, pred_len, value_threshold, strong_threshold,
-                    epoch, stop_loss_ratio, stop_correct_threshold, 
-                    device, save_dir, train_config):
+                    epoch, device, save_dir, train_config):
     
     best_test_loss = np.inf
     best_test_score = 0
@@ -43,7 +42,7 @@ def train_predictor(model, optimizer, scheduler, loss_function,
         scheduler.step()
         
         if epoch >= 10:
-            if epoch_avg_loss < best_test_loss * stop_loss_ratio or correct_rate >= stop_correct_threshold:
+            if epoch_avg_loss < best_test_loss * train_config.stop_loss_ratio or correct_rate >= train_config.stop_correct_threshold:
                 print(f"Train early stop at epoch {epoch} (epoch_loss={epoch_avg_loss}, best_val_loss={best_test_loss})")
                 break
     
