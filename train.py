@@ -66,6 +66,7 @@ def main(args):
                         optimizer=optimizer,
                         scheduler=scheduler,
                         loss_function=loss_function,
+                        max_norm=args.max_norm,
                         train_loader=train_loader,
                         test_loader=test_loader,
                         test_bs=test_bs,
@@ -98,6 +99,7 @@ if __name__ == '__main__':
     parser.add_argument('--gpu', type=bool, default=True)
     parser.add_argument('--lr', type=float, default=1e-5)
     parser.add_argument('--gamma', type=float, default=0.999)
+    parser.add_argument('--max_norm', type=float, default=1)
     parser.add_argument('--value_threshold', type=float, default=0.1)
     parser.add_argument('--strong_threshold', type=float, default=0.05)
     parser.add_argument('--stop_loss_ratio', type=float, default=0.5)

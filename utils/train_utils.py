@@ -1,9 +1,10 @@
 import torch
 import numpy as np
+from torch.nn.utils import clip_grad_value_
 from tqdm import tqdm
 from .test_utils import test_predictor
 
-def train_predictor(model, optimizer, scheduler, loss_function,
+def train_predictor(model, optimizer, scheduler, loss_function, max_norm,
                     train_loader, test_loader, test_bs,
                     data_len, pred_len, value_threshold, strong_threshold,
                     epoch, device, save_dir, train_config):
@@ -32,6 +33,7 @@ def train_predictor(model, optimizer, scheduler, loss_function,
                 loss = loss_function(out,label)
                 loss.backward()
 
+                clip_grad_value_(model.parameters(), clip_value=max_norm)
                 optimizer.step()
                 optimizer.zero_grad()
             
