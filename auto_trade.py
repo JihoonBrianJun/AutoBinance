@@ -62,7 +62,7 @@ def main(args):
             break
     
     client = Client(api_key, api_secret)
-    futures_change_leverage(client, 10)
+    futures_change_leverage(client, args.leverage)
     
     while True:
         if int(datetime.now().second) == 5:

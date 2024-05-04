@@ -46,4 +46,4 @@ def train_predictor(model, optimizer, scheduler, loss_function,
     
     test_predictor(model, loss_function, test_loader, test_bs,
                    data_len, pred_len, value_threshold, strong_threshold,
-                   device, save_dir, train_config)
+                   device, save_dir, train_config, save_ckpt=False, load_ckpt=True)
