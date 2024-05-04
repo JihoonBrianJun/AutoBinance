@@ -74,8 +74,6 @@ def main(args):
                         value_threshold=args.value_threshold, 
                         strong_threshold=args.strong_threshold,
                         epoch=args.epoch,
-                        stop_loss_ratio=args.stop_loss_ratio,
-                        stop_correct_threshold=args.stop_correct_threshold,
                         device=device,
                         save_dir=save_dir,
                         train_config=train_config)
