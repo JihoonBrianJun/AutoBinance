@@ -11,7 +11,7 @@ def save_model(model, save_dir, train_config):
     
 def test_predictor(model, loss_function, dataloader, test_bs,
                    data_len, pred_len, value_threshold, strong_threshold,
-                   device, save_dir, train_config, best_test_loss=None, best_test_correct=None,
+                   device, save_dir, train_config, best_test_loss=None, best_test_score=None,
                    save_ckpt=True, load_ckpt=False):
     if load_ckpt:
         model.load_state_dict(torch.load(f'{save_dir}.pt'))
