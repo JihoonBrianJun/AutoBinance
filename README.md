@@ -63,7 +63,7 @@ Train hyperparameters is summarized in the following table.
 
 After training, metrics evaluated on validation data were as follows:
 
-![](assets/train_result2.png "TrainResult")
+![](assets/train_result3.png "TrainResult")
 
 
 ## Metrics
