@@ -31,7 +31,7 @@ def predict(client, args):
                                tgt_feature_dim=config["tgt_feature_dim"],
                                data_len=config["data_len"],
                                pred_len=config["pred_len"]).to(device)
-        model.load_state_dict(torch.load(ckpt_save_dir))
+        model.load_state_dict(torch.load(ckpt_save_dir, map_location=device))
         out = model(torch.tensor(src).to(torch.float32).to(device), torch.tensor(tgt).to(torch.float32).to(device))
         print(f'This Kline Close Price Change Rate (Predicted): {out[0][-1].item()}')
     
