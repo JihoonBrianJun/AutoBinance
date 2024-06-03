@@ -39,3 +39,20 @@ def preprocess_csv(data_path, data_len, data_hop, pred_len, volume_normalizer):
         data.append({'src': src, 'tgt': tgt})
     
     return data
+
+
+def preprocess_state(data_path, horizon, hop, volume_normalizer):
+    df = pd.read_csv(data_path).sort_values(by='open_time').reset_index(drop=True)
+    for volume_key in ['volume', 'taker_buy_volume']:
+        df[volume_key] = df[volume_key].apply(lambda x: np.log(x)) - volume_normalizer
+    df = df[['open', 'high', 'low', 'close', 'volume', 'taker_buy_volume']]
+    
+    state_list = []
+    for idx in tqdm(range((df.shape[0]-horizon)//hop)):
+        state_df = df.iloc[idx*hop:idx*hop+horizon]
+        state_base_price = state_df['open'].iloc[0]
+        for price_key in ['open', 'high', 'low', 'close']:
+            state_df[price_key] = (state_df[price_key] - state_base_price) / state_base_price * 100
+        state_list.append(state_df.to_numpy())
+    
+    return np.stack(state_list, axis=0)

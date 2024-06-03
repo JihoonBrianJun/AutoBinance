@@ -1,8 +1,10 @@
 import json
 import torch
 import numpy as np
+import pandas as pd
 from tqdm import tqdm
 from .metric_utils import compute_predictor_metrics
+from .trajectory_utils import process_state_window, compute_reward
 
 def save_model(model, save_dir, train_config):
     torch.save(model.state_dict(), f'{save_dir}.pt')
@@ -61,3 +63,36 @@ def test_predictor(model, loss_function, dataloader, test_bs,
             save_model(model, save_dir, train_config)
             
     return avg_test_loss, correct_rate, test_score
+
+
+def test_ppo_agents(Actor, horizon, window, fee, state_list, bs, device, save_dir, train_config, best_avg_reward,
+                    save_ckpt=True, load_ckpt=False):
+    if load_ckpt:
+        Actor.load_state_dict(torch.load(f'{save_dir}.pt'))
+    state_windows, actor_outputs, _ = process_state_window(state_list, Actor, None, horizon, window, device, bs, process_critic=False)
+    
+    reward_sum_list = []
+    for state_idx in range(len(state_list)):
+        action_list, reward_list = compute_reward(state_windows[state_idx], actor_outputs[state_idx], horizon, window, fee)
+        reward_sum_list.append(sum(reward_list))
+        if state_idx == 0:
+            state_close_prices = [np.round(minute_state[3], 4) for minute_state in state_list[state_idx]]
+            df = pd.DataFrame(state_close_prices, columns=['prev_close_price'])
+            df['action'] = pd.DataFrame([np.nan] * window + [np.round(action, 4) for action in action_list])
+            df['reward'] = pd.DataFrame([np.nan] * window + [np.round(reward, 4) for reward in reward_list])
+            position_list = []
+            position = 0
+            for action in action_list:
+                position += action
+                position_list.append(position)
+            df['reward'] = pd.DataFrame([np.nan] * window + [np.round(position, 4) for position in position_list])
+            print(df)
+            print(f'reward sum: {sum(reward_list)}')
+
+    avg_reward = sum(reward_sum_list) / len(state_list)
+    print(f'Average Reward: {avg_reward}')
+
+    if save_ckpt and avg_reward > best_avg_reward:
+        save_model(Actor, save_dir, train_config)
+        
+    return avg_reward
