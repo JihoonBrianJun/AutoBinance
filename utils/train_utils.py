@@ -64,6 +64,7 @@ def train_ppo_agents(Actor, actor_optimizer, actor_scheduler,
                      save_dir, train_config):
     
     best_avg_reward = -np.inf
+    nan_stop = False
     for step in range(step):
         if step % 10 == 0 and step != 0:
             avg_reward = test_ppo_agents(Actor, horizon, window, fee, test_state_list, bs, device, save_dir, train_config, best_avg_reward)
@@ -100,11 +101,18 @@ def train_ppo_agents(Actor, actor_optimizer, actor_scheduler,
             critic_scheduler.step()
             critic_step_loss += critic_loss.detach().cpu().item()
             
+            if actor_loss == np.nan or critic_loss == np.nan:
+                nan_stop = True
+                break
+            
             # print(f'batch_actions: {batch_actions}')
             # print(f'batch_advantages: {batch_advantages}')
             # print(f'batch_reward_to_go: {batch_reward_to_go}')
             # print(f'batch_actor_outputs: {batch_actor_outputs}')
             # print(f'batch_critic_outputs: {batch_critic_outputs}')
+        
+        if nan_stop:
+            break
         
         actor_step_avg_loss = actor_step_loss/(idx+1)
         critic_step_avg_loss = critic_step_loss/(idx+1)

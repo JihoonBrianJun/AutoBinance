@@ -90,7 +90,7 @@ def test_ppo_agents(Actor, horizon, window, fee, state_list, bs, device, save_di
             print(f'reward sum: {sum(reward_list)}')
 
     avg_reward = sum(reward_sum_list) / len(state_list)
-    print(f'Average Reward: {avg_reward}')
+    print(f'Average Reward: {avg_reward} vs Best Average Reward: {best_avg_reward}')
 
     if save_ckpt and avg_reward > best_avg_reward:
         save_model(Actor, save_dir, train_config)

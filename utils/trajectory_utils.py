@@ -36,18 +36,18 @@ def compute_reward(state_window_list, actor_output_list, horizon, window, fee):
         reward = -fee * (100 + window_close_price) * np.abs(action)
         if action > 0:
             if position >= 0:
-                vwap = (position * vwap + action * window_close_price) / (position + action)
+                vwap = (position * vwap + action * window_close_price) / (position + action + 1e-8)
             elif position >= -action:
                 reward += (vwap - window_close_price) * (-position)
-                vwap = (position + action) * window_close_price / (position + action)
+                vwap = (position + action) * window_close_price / (position + action + 1e-8)
             else:
                 reward += (vwap - window_close_price) * action
         elif action < 0:
             if position <= 0:
-                vwap = (position * vwap + action * window_close_price) / (position + action)
+                vwap = (position * vwap + action * window_close_price) / (position + action + 1e-8)
             elif position <= -action:
                 reward += (window_close_price - vwap) * position
-                vwap = (position + action) * window_close_price / (position + action)
+                vwap = (position + action) * window_close_price / (position + action + 1e-8)
             else:
                 reward += (window_close_price - vwap) * (-action)               
         position += action
