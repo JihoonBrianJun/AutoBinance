@@ -85,7 +85,7 @@ def test_ppo_agents(Actor, horizon, window, fee, state_list, bs, device, save_di
             for action in action_list:
                 position += action
                 position_list.append(position)
-            df['reward'] = pd.DataFrame([np.nan] * window + [np.round(position, 4) for position in position_list])
+            df['position'] = pd.DataFrame([np.nan] * window + [np.round(position, 4) for position in position_list])
             print(df)
             print(f'reward sum: {sum(reward_list)}')
 
