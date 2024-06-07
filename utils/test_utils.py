@@ -79,6 +79,7 @@ def test_ppo_agents(Actor, action_bins, horizon, window, fee, episode_list, bs, 
         reward_sum = sum(reward_list)
         reward_sum_list.append(reward_sum)
         long_only_return = episode_list[episode_idx][-1][3] - episode_list[episode_idx][window-1][3]
+        long_only_return -= fee * ((100 + episode_list[episode_idx][-1][3]) + (100 + episode_list[episode_idx][window-1][3]))
         long_only_return_list.append(long_only_return)
         if reward_sum > long_only_return:
             win += 1
