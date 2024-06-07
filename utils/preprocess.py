@@ -49,10 +49,10 @@ def preprocess_episode(data_path, horizon, hop, volume_normalizer):
     
     episode_list = []
     for idx in tqdm(range((df.shape[0]-horizon)//hop)):
-        state_df = df.iloc[idx*hop:idx*hop+horizon]
-        state_base_price = state_df['open'].iloc[0]
+        episode_df = df.iloc[idx*hop:idx*hop+horizon]
+        episode_base_price = episode_df['open'].iloc[0]
         for price_key in ['open', 'high', 'low', 'close']:
-            state_df[price_key] = (state_df[price_key] - state_base_price) / state_base_price * 100
-        episode_list.append(state_df.to_numpy())
+            episode_df[price_key] = (episode_df[price_key] - episode_base_price) / episode_base_price * 100
+        episode_list.append(episode_df.to_numpy())
     
     return np.stack(episode_list, axis=0)
