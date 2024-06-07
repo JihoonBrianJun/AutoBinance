@@ -71,7 +71,7 @@ if __name__ == '__main__':
     parser.add_argument('--save_dir', type=str, default='ckpt/rl')
     parser.add_argument('--epoch', type=int, default=10000)
     parser.add_argument('--step_per_epoch', type=int, default=10)
-    parser.add_argument('--action_bins', type=int, default=21)
+    parser.add_argument('--action_bins', type=int, default=41)
     parser.add_argument('--sample_size', type=int, default=1024)
     parser.add_argument('--horizon', type=int, default=60)
     parser.add_argument('--hop', type=int, default=20)

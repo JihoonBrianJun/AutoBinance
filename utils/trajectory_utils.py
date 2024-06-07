@@ -34,7 +34,7 @@ def compute_reward(state_list, actor_output_list, action_bins, horizon, window, 
     action_list, reward_list = [], []
     for t in range(horizon-window):
         window_close_price = state_list[t][-1][3]
-        action = np.clip(actor_output_list[t] * 2/(action_bins-1) - 1, -1-position, 1-position)
+        action = np.clip(actor_output_list[t] * 4/(action_bins-1) - 1, -1-position, 1-position)
         reward = -fee * (100 + window_close_price) * np.abs(action)
         if action > 0:
             if position >= 0:
